@@ -1,0 +1,206 @@
+# Setup Guide — RABS Storefront
+
+> Roots & Botanical Solutions — the public-facing storefront.
+
+## Prerequisites
+
+- **Node.js 18+** (ideally 20+)
+- A **[Turso](https://turso.tech)** account (free tier works)
+- A **[Vercel](https://vercel.com)** account (for deployment)
+
+---
+
+## 1. Turso Database (shared with RABS Portal)
+
+Both the Storefront and Portal use **the same Turso database**. You only set up the database once.
+
+### Create database
+
+1. Go to https://turso.tech → Sign up / Login.
+2. Click **Create Database**.
+3. Name it `rabs-db` (or whatever you like), pick a region close to your users, click **Create**.
+
+### Get credentials
+
+On your database page:
+
+- Copy the **URL** — it looks like `libsql://rabs-db-yourorg.turso.io`.
+- Go to the **Tokens** tab → create a full-access token → copy it.
+
+### Create all tables
+
+Open the Turso **SQL Shell** (or run via `turso db shell`) and paste each statement one at a time:
+
+```sql
+CREATE TABLE IF NOT EXISTS categories (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  description TEXT DEFAULT '',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+```sql
+CREATE TABLE IF NOT EXISTS products (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  description TEXT DEFAULT '',
+  price REAL NOT NULL,
+  image_url TEXT,
+  category_id TEXT,
+  is_featured INTEGER DEFAULT 0,
+  is_active INTEGER DEFAULT 1,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+);
+```
+
+```sql
+CREATE TABLE IF NOT EXISTS reviews (
+  id TEXT PRIMARY KEY,
+  product_id TEXT NOT NULL,
+  customer_name TEXT NOT NULL,
+  rating INTEGER CHECK(rating >= 1 AND rating <= 5),
+  comment TEXT NOT NULL,
+  reply TEXT,
+  replied_at DATETIME,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+```
+
+```sql
+CREATE TABLE IF NOT EXISTS orders (
+  id TEXT PRIMARY KEY,
+  customer_name TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  email TEXT,
+  address TEXT NOT NULL,
+  city TEXT NOT NULL,
+  notes TEXT,
+  payment_method TEXT DEFAULT 'cod',
+  status TEXT DEFAULT 'pending',
+  total REAL NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+```sql
+CREATE TABLE IF NOT EXISTS order_items (
+  id TEXT PRIMARY KEY,
+  order_id TEXT NOT NULL,
+  product_id TEXT,
+  product_name TEXT NOT NULL,
+  quantity INTEGER NOT NULL,
+  unit_price REAL NOT NULL,
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+);
+```
+
+```sql
+CREATE TABLE IF NOT EXISTS admin_users (
+  id TEXT PRIMARY KEY,
+  username TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+> You only need to run these once. Both sites share the same database.
+
+---
+
+## 2. Local Development
+
+```bash
+cd RABS-Storefront
+npm install
+cp .env.example .env.local
+```
+
+Edit `.env.local` with your Turso credentials:
+
+```
+TURSO_DATABASE_URL=libsql://rabs-db-yourorg.turso.io
+TURSO_AUTH_TOKEN=your-token-here
+```
+
+Start the dev server:
+
+```bash
+npm run dev
+```
+
+The store will be at **http://localhost:3000**.
+
+### First admin (via RABS Portal)
+
+1. Run the Portal locally on port 3001: `cd ../RABS-Portal && npm run dev`
+2. Visit http://localhost:3001/setup
+3. Create your first admin username and password.
+4. Use those same credentials to log in to the Portal.
+
+---
+
+## 3. Vercel Deployment
+
+### Create a second Vercel project
+
+1. Push this repo to GitHub.
+2. Go to https://vercel.com/new → **Import** this repo.
+3. Framework: **Next.js** (auto-detected).
+4. Set the **Root Directory** to `/` (the repo root).
+
+### Add environment variables
+
+In the Vercel project settings, add:
+
+```
+TURSO_DATABASE_URL=libsql://rabs-db-yourorg.turso.io
+TURSO_AUTH_TOKEN=your-turso-token
+```
+
+5. Click **Deploy**.
+
+### Set the Portal's storefront URL
+
+In the Portal's Vercel settings, the "back to store" link is hardcoded to `rabs-storefront.vercel.app`. Update it in `app/(auth)/layout.tsx` after you know your actual Vercel domain.
+
+---
+
+## 4. How it works
+
+| Page | URL | Description |
+|------|-----|-------------|
+| Home | `/` | Brand intro, featured products, value props |
+| About Us | `/about` | Brand story, commitments, values |
+| Store | `/store` | Full catalogue with category filter, search, sort |
+| Product | `/store/[slug]` | Product detail + reviews + add to cart |
+| Checkout | `/checkout` | Cart review → Cash on Delivery form |
+| Order Confirmation | `/order-confirmation/[id]` | Post-checkout summary |
+
+### Order flow (Cash on Delivery)
+
+1. Customer browses the store → adds items to cart → cart drawer opens.
+2. Customer goes to Checkout → fills in name, phone, address, city.
+3. Order is placed → shown confirmation page.
+4. Admin sees the order in the Portal → updates status: pending → confirmed → shipped → delivered.
+
+---
+
+## 5. Password hashing (pass-hash.vercel.app spec)
+
+Passwords are hashed using **scrypt** with the following parameters:
+
+| Parameter | Value |
+|-----------|-------|
+| N (CPU/memory cost) | 16384 |
+| r (block size) | 8 |
+| p (parallelization) | 1 |
+| Key length | 64 bytes |
+| Salt length | 16 random bytes (hex-encoded, 32 chars) |
+| Output format | `saltHex:hashHex` |
+
+This matches https://pass-hash.vercel.app exactly. The hash runs server-side via Node.js `crypto.scryptSync`. No plaintext passwords ever hit the database.
