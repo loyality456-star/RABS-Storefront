@@ -43,7 +43,7 @@ export default function Footer() {
             <p className="text-label-md uppercase tracking-[0.08em] text-primary">
               Contact
             </p>
-            <p className="text-body-md text-on-surface-variant">roots@rabs.store</p>
+            <p className="text-body-md text-on-surface-variant">loyality456@gmail.com</p>
             <p className="text-body-md text-on-surface-variant">Cash on Delivery nationwide</p>
           </div>
         </div>
