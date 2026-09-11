@@ -20,9 +20,12 @@ export default function CartDrawer() {
 
       <aside
         className={`fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col bg-surface shadow-elevation-high transition-transform duration-300 ${
-          drawerOpen ? "translate-x-0" : "translate-x-full"
+          drawerOpen
+            ? "visible translate-x-0 pointer-events-auto"
+            : "invisible translate-x-full pointer-events-none"
         }`}
         aria-label="Shopping cart"
+        aria-hidden={!drawerOpen}
       >
         <header className="flex items-center justify-between border-b border-outline-variant px-lg py-md">
           <h2 className="font-display text-headline-md text-on-surface">Your Cart</h2>
