@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   },
   description:
     "Handcrafted botanical remedies, wellness elixirs and pure plant-based apothecary solutions.",
+  icons: { icon: "/logo.png" },
 };
 
 export const viewport: Viewport = {
