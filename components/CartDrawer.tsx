@@ -12,7 +12,7 @@ export default function CartDrawer() {
     <>
       {drawerOpen && (
         <div
-          className="fixed inset-0 z-50 bg-[#13231A]/40 backdrop-blur-[2px]"
+          className="fixed inset-0 z-50 bg-[#13231A]/40 backdrop-blur-md"
           onClick={() => setDrawerOpen(false)}
           aria-hidden="true"
         />
