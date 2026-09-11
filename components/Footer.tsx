@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { LeafMark, LeafDivider } from "@/components/Leaf";
+import Image from "next/image";
+import { LeafDivider } from "@/components/Leaf";
 
 export default function Footer() {
   return (
@@ -8,9 +9,13 @@ export default function Footer() {
         <div className="flex flex-col gap-lg md:flex-row md:items-start md:justify-between">
           <div className="max-w-sm">
             <div className="flex items-center gap-sm">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-container text-on-primary-container">
-                <LeafMark className="h-5 w-5" />
-              </span>
+              <Image
+                src="/logo.png"
+                alt="RABS — Roots & Botanical Solutions logo"
+                width={40}
+                height={40}
+                className="h-10 w-10 rounded-full object-cover ring-1 ring-outline-variant"
+              />
               <div>
                 <p className="font-display text-title-lg text-on-surface">RABS</p>
                 <p className="text-label-sm text-on-surface-variant">

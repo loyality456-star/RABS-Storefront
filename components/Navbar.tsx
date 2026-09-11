@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { LeafMark } from "@/components/Leaf";
 import { useCart } from "@/components/CartContext";
 import CartDrawer from "@/components/CartDrawer";
 
@@ -22,9 +22,14 @@ export default function Navbar() {
     <header className="sticky top-0 z-40 border-b border-outline-variant bg-surface/90 backdrop-blur">
       <nav className="container-site flex h-16 items-center justify-between gap-md">
         <Link href="/" className="flex items-center gap-sm">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-container text-on-primary-container">
-            <LeafMark className="h-5 w-5" />
-          </span>
+          <Image
+            src="/logo.png"
+            alt="RABS — Roots & Botanical Solutions logo"
+            width={40}
+            height={40}
+            className="h-10 w-10 rounded-full object-cover ring-1 ring-outline-variant"
+            priority
+          />
           <span className="hidden flex-col sm:flex">
             <span className="font-display text-title-lg text-on-surface">
               RABS
