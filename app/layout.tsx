@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
 import "@/app/globals.css";
 import Navbar from "@/components/Navbar";
@@ -26,6 +26,14 @@ export const metadata: Metadata = {
   },
   description:
     "Handcrafted botanical remedies, wellness elixirs and pure plant-based apothecary solutions.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
