@@ -1,13 +1,15 @@
 import { nanoid } from "nanoid";
 import { execute, query, queryOne } from "@/lib/db";
-import { SCHEMA_SQL } from "@/lib/schema";
+import { SCHEMA_STATEMENTS } from "@/lib/schema";
 import type { Category, ProductWithCategory, Review } from "@/lib/schema";
 
 let initialized = false;
 
 export async function ensureSchema() {
   if (initialized) return;
-  await execute(SCHEMA_SQL);
+  for (const stmt of SCHEMA_STATEMENTS) {
+    await execute(stmt);
+  }
   initialized = true;
 }
 
