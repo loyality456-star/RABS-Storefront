@@ -80,7 +80,10 @@ export default async function OrderConfirmationPage({
           </div>
 
           <div className="flex flex-wrap gap-sm">
-            <Link href="/store" className="btn-primary">
+            <Link href="/track" className="btn-primary">
+              Track this order
+            </Link>
+            <Link href="/store" className="btn-secondary">
               Keep shopping
             </Link>
             <Link href="/" className="btn-secondary">

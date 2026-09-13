@@ -11,6 +11,7 @@ const LINKS = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About Us" },
   { href: "/store", label: "Store" },
+  { href: "/track", label: "Track Order" },
 ];
 
 export default function Navbar() {

@@ -42,6 +42,9 @@ export default function Footer() {
             <Link href="/store" className="text-body-md text-on-surface-variant hover:text-primary">
               Store
             </Link>
+            <Link href="/track" className="text-body-md text-on-surface-variant hover:text-primary">
+              Track Order
+            </Link>
           </div>
 
           <div className="flex flex-col gap-xs">
