@@ -49,7 +49,7 @@ export default function Footer() {
               Contact
             </p>
             <p className="text-body-md text-on-surface-variant">loyality456@gmail.com</p>
-            <p className="text-body-md text-on-surface-variant">Cash on Delivery nationwide</p>
+            <p className="text-body-md text-on-surface-variant">Nationwide Shipping (Pakistan)</p>
           </div>
         </div>
 
