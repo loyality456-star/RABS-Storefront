@@ -19,10 +19,10 @@ export default function CartDrawer() {
       )}
 
       <aside
-        className={`fixed inset-0 z-50 flex w-full flex-col bg-surface shadow-elevation-high transition-transform duration-300 ${
+        className={`fixed inset-0 z-50 flex w-full flex-col bg-surface shadow-elevation-high transition-transform duration-300 md:inset-y-0 md:left-auto md:right-0 md:top-0 md:h-full md:max-w-md ${
           drawerOpen
-            ? "visible translate-y-0 pointer-events-auto"
-            : "invisible translate-y-full pointer-events-none"
+            ? "visible translate-y-0 md:translate-x-0"
+            : "invisible translate-y-full md:translate-x-full pointer-events-none"
         }`}
         aria-label="Shopping cart"
         aria-hidden={!drawerOpen}
