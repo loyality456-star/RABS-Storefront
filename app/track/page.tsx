@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { formatPrice } from "@/lib/price";
+import { shippingForQuantity } from "@/lib/shipping";
 
 const STEPS = ["pending", "confirmed", "shipped", "delivered"] as const;
 
@@ -190,6 +191,18 @@ export default function TrackPage() {
                 </div>
               ))}
               <div className="flex items-center justify-between pt-sm">
+                <span className="text-body-md text-on-surface-variant">
+                  Shipping (200 PKR / 5 items)
+                </span>
+                <span className="text-body-md text-on-surface">
+                  {formatPrice(
+                    shippingForQuantity(
+                      items.reduce((n, item) => n + item.quantity, 0)
+                    )
+                  )}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
                 <span className="text-title-lg text-on-surface">Total</span>
                 <span className="font-display text-headline-md text-primary">
                   {formatPrice(order.total)}

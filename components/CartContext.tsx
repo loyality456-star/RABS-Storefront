@@ -8,6 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { shippingForQuantity, orderTotal } from "@/lib/shipping";
 
 export interface CartLine {
   productId: string;
@@ -22,6 +23,8 @@ interface CartContextValue {
   lines: CartLine[];
   count: number;
   subtotal: number;
+  shipping: number;
+  total: number;
   drawerOpen: boolean;
   setDrawerOpen: (open: boolean) => void;
   add: (line: Omit<CartLine, "quantity">, qty?: number) => void;
@@ -85,11 +88,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const clear = useCallback(() => setLines([]), []);
 
-  const { count, subtotal } = useMemo(() => {
-    return {
-      count: lines.reduce((n, l) => n + l.quantity, 0),
-      subtotal: lines.reduce((n, l) => n + l.price * l.quantity, 0),
-    };
+  const { count, subtotal, shipping, total } = useMemo(() => {
+    const count = lines.reduce((n, l) => n + l.quantity, 0);
+    const subtotal = lines.reduce((n, l) => n + l.price * l.quantity, 0);
+    const shipping = shippingForQuantity(count);
+    return { count, subtotal, shipping, total: orderTotal(subtotal, count) };
   }, [lines]);
 
   const value = useMemo(
@@ -97,6 +100,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       lines,
       count,
       subtotal,
+      shipping,
+      total,
       drawerOpen,
       setDrawerOpen,
       add,
@@ -104,7 +109,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setQuantity,
       clear,
     }),
-    [lines, count, subtotal, drawerOpen, add, remove, setQuantity, clear]
+    [lines, count, subtotal, shipping, total, drawerOpen, add, remove, setQuantity, clear]
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

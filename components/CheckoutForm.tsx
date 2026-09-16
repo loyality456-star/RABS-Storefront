@@ -8,9 +8,11 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 
+import { shippingForQuantity, orderTotal } from "@/lib/shipping";
+
 export default function CheckoutForm() {
   const router = useRouter();
-  const { lines, subtotal, clear } = useCart();
+  const { lines, subtotal, count, clear } = useCart();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -94,13 +96,27 @@ export default function CheckoutForm() {
         </div>
       </fieldset>
 
-      <div className="card flex items-center justify-between">
-        <span className="text-label-lg uppercase tracking-[0.06em] text-on-surface-variant">
-          Total
-        </span>
-        <span className="font-display text-headline-md text-primary">
-          {formatPrice(subtotal)}
-        </span>
+      <div className="card space-y-sm">
+        <div className="space-y-xs px-md pt-md">
+          <div className="flex items-center justify-between">
+            <span className="text-body-md text-on-surface-variant">Subtotal</span>
+            <span className="text-body-md text-on-surface">{formatPrice(subtotal)}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-body-md text-on-surface-variant">
+              Shipping (200 PKR / 5 items)
+            </span>
+            <span className="text-body-md text-on-surface">{formatPrice(shippingForQuantity(count))}</span>
+          </div>
+        </div>
+        <div className="flex items-center justify-between rounded-[0.5rem] border border-outline-variant bg-surface-container-low px-md py-sm">
+          <span className="text-label-lg uppercase tracking-[0.06em] text-on-surface-variant">
+            Total (COD)
+          </span>
+          <span className="font-display text-headline-md text-primary">
+            {formatPrice(orderTotal(subtotal, count))}
+          </span>
+        </div>
       </div>
 
       {error && (

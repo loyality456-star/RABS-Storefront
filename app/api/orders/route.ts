@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { execute } from "@/lib/db";
 import { ensureSchema, newId } from "@/lib/products";
+import { orderTotal } from "@/lib/shipping";
 
 export const dynamic = "force-dynamic";
 
@@ -27,10 +28,15 @@ export async function POST(req: Request) {
     await ensureSchema();
     const body = orderSchema.parse(await req.json());
 
-    const total = body.items.reduce(
+    const subtotal = body.items.reduce(
       (sum, item) => sum + item.unit_price * item.quantity,
       0
     );
+    const quantity = body.items.reduce(
+      (sum, item) => sum + item.quantity,
+      0
+    );
+    const total = orderTotal(subtotal, quantity);
 
     const orderId = newId();
     const customer = {

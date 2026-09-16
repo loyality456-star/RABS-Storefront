@@ -5,7 +5,7 @@ import { useCart } from "@/components/CartContext";
 import { formatPrice } from "@/lib/price";
 
 export default function CartDrawer() {
-  const { lines, drawerOpen, setDrawerOpen, setQuantity, remove, subtotal } =
+  const { lines, drawerOpen, setDrawerOpen, setQuantity, remove, subtotal, shipping, total } =
     useCart();
 
   return (
@@ -121,15 +121,27 @@ export default function CartDrawer() {
             </ul>
 
             <footer className="border-t border-outline-variant px-lg py-md">
-              <div className="flex items-center justify-between">
-                <span className="text-label-lg uppercase tracking-[0.06em] text-on-surface-variant">
-                  Subtotal
-                </span>
-                <span className="font-display text-headline-md text-primary">
-                  {formatPrice(subtotal)}
-                </span>
+              <div className="space-y-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-body-md text-on-surface-variant">Subtotal</span>
+                  <span className="text-body-md text-on-surface">{formatPrice(subtotal)}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-body-md text-on-surface-variant">
+                    Shipping (200 PKR / 5 items)
+                  </span>
+                  <span className="text-body-md text-on-surface">{formatPrice(shipping)}</span>
+                </div>
+                <div className="flex items-center justify-between pt-xs">
+                  <span className="text-label-lg uppercase tracking-[0.06em] text-on-surface-variant">
+                    Total
+                  </span>
+                  <span className="font-display text-headline-md text-primary">
+                    {formatPrice(total)}
+                  </span>
+                </div>
               </div>
-              <p className="mt-xs text-body-sm text-on-surface-variant">
+              <p className="mt-sm text-body-sm text-on-surface-variant">
                 Cash on Delivery — pay when your order arrives.
               </p>
               <Link
