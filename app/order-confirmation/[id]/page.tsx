@@ -4,7 +4,7 @@ import Link from "next/link";
 import { query, queryOne } from "@/lib/db";
 import { ensureSchema } from "@/lib/products";
 import { formatPrice } from "@/lib/price";
-import { shippingForQuantity } from "@/lib/shipping";
+import { shippingForQuantity, PLATFORM_FEE } from "@/lib/shipping";
 import type { Order, OrderItem } from "@/lib/schema";
 
 export const metadata: Metadata = { title: "Order confirmed" };
@@ -82,6 +82,12 @@ export default async function OrderConfirmationPage({
                       itemsList.reduce((n, i) => n + i.quantity, 0)
                     )
                   )}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-body-md text-on-surface-variant">Platform fee</span>
+                <span className="text-body-md text-on-surface">
+                  {formatPrice(PLATFORM_FEE)}
                 </span>
               </div>
               <div className="flex items-center justify-between">

@@ -5,7 +5,7 @@ import { useCart } from "@/components/CartContext";
 import { formatPrice } from "@/lib/price";
 
 export default function CartDrawer() {
-  const { lines, drawerOpen, setDrawerOpen, setQuantity, remove, subtotal, shipping, total } =
+  const { lines, drawerOpen, setDrawerOpen, setQuantity, remove, subtotal, shipping, fee, total } =
     useCart();
 
   return (
@@ -131,6 +131,12 @@ export default function CartDrawer() {
                     Shipping (200 PKR / 5 items)
                   </span>
                   <span className="text-body-md text-on-surface">{formatPrice(shipping)}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-body-md text-on-surface-variant">
+                    Platform fee
+                  </span>
+                  <span className="text-body-md text-on-surface">{formatPrice(fee)}</span>
                 </div>
                 <div className="flex items-center justify-between pt-xs">
                   <span className="text-label-lg uppercase tracking-[0.06em] text-on-surface-variant">

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 
-import { shippingForQuantity, orderTotal } from "@/lib/shipping";
+import { shippingForQuantity, orderTotal, PLATFORM_FEE } from "@/lib/shipping";
 
 export default function CheckoutForm() {
   const router = useRouter();
@@ -107,6 +107,10 @@ export default function CheckoutForm() {
               Shipping (200 PKR / 5 items)
             </span>
             <span className="text-body-md text-on-surface">{formatPrice(shippingForQuantity(count))}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-body-md text-on-surface-variant">Platform fee</span>
+            <span className="text-body-md text-on-surface">{formatPrice(PLATFORM_FEE)}</span>
           </div>
         </div>
         <div className="flex items-center justify-between rounded-[0.5rem] border border-outline-variant bg-surface-container-low px-md py-sm">
